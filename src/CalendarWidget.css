@@ -1,0 +1,70 @@
+/* CalendarWidget.css */
+
+.calendar-widget {
+  width: 600px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px; /* Lisätty marginaali otsikon alle */
+}
+
+.calendar-header button {
+  padding: 8px 16px; /* Lisätty padding napeille */
+  border: none;
+  border-radius: 5px;
+  background-color: #eee; /* Hieman vaaleampi tausta napeille */
+  cursor: pointer;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.calendar-day-header {
+  font-weight: bold;
+  padding: 8px 0; /* Lisätty padding otsikoille */
+}
+
+.calendar-day {
+  padding: 8px; /* Lisätty padding päiville */
+  background: #f4f4f4;
+  border-radius: 5px;
+  font-size: 14px;
+  position: relative;
+  text-align: center; /* Päivän numero keskelle */
+  cursor: pointer; /* Lisätty kursori, jos halutaan klikattavuus */
+}
+
+.calendar-day:hover {
+  background-color: #e0e0e0; /* Tausta muuttuu hoverilla */
+}
+
+
+.moon-phase {
+  font-size: 10px;
+  color: gray;
+  margin-top: 5px; /* Lisätty marginaali kuun vaiheelle */
+  display: flex;
+  flex-direction: column; /* Kuun vaihe ja emoji allekkain */
+  align-items: center; /* Keskitetään sisältö */
+}
+
+.moon-phase span {
+  margin-left: 0; /* Poistetaan aiempi marginaali emojilta */
+}
+
+.current-month {
+  font-size: 1.2em; /* Suurempi fonttikoko kuukaudelle */
+  font-weight: bold;
+}

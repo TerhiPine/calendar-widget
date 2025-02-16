@@ -70,3 +70,7 @@
   font-weight: bold;
 
 }
+.current-day {
+  background-color: #c0d9af; /* Korostusväri nykyiselle päivälle */
+  font-weight: bold; /* Esimerkiksi lihavoitu teksti */
+}

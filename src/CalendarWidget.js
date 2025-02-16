@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { format, startOfMonth, endOfMonth, startOfWeek, addDays, addMonths, subMonths } from "date-fns";
+import { format, startOfMonth, endOfMonth, startOfWeek, addDays, addMonths, subMonths, isSameDay } from "date-fns";
 import { Moon, Hemisphere } from "lunarphase-js";
 import './CalendarWidget.css'; // Polku CSS-tiedostoon
 
@@ -51,13 +51,14 @@ const CalendarWidget = () => {
         ))}
         {days.map(day => {
           const phaseInfo = calculateMoonPhase(day);
+          const isToday = isSameDay(day, new Date()); // Tarkistetaan onko päivä sama kuin nykyinen päivä
 
           return (
-            <div key={day} className="calendar-day">
-              {format(day, "d")}
-              <div className="moon-phase">
-                <span>{phaseInfo.name}</span>
-                <span>{phaseInfo.emoji}</span>
+            <div key={day} className={`calendar-day ${isToday ? 'current-day' : ''}`}> {/* Lisätään luokka current-day jos on nykyinen päivä */}
+                            {format(day, "d")}
+                            <div className="moon-phase">
+                                <span>{phaseInfo.name}</span>
+                                <span>{phaseInfo.emoji}</span>
               </div>
             </div>
           );

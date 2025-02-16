@@ -2,10 +2,10 @@
 
 .calendar-widget {
   width: 600px;
-  background: #fff;
+  background: #4aad78;
   border-radius: 10px;
   padding: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 8px rgba(1, 59, 29, 0.2);
   font-family: Arial, sans-serif;
   text-align: center;
 }
@@ -21,7 +21,7 @@
   padding: 8px 16px; /* Lisätty padding napeille */
   border: none;
   border-radius: 5px;
-  background-color: #eee; /* Hieman vaaleampi tausta napeille */
+  background-color: #f7f9f78b; /* Hieman vaaleampi tausta napeille */
   cursor: pointer;
 }
 
@@ -34,11 +34,12 @@
 .calendar-day-header {
   font-weight: bold;
   padding: 8px 0; /* Lisätty padding otsikoille */
+
 }
 
 .calendar-day {
   padding: 8px; /* Lisätty padding päiville */
-  background: #f4f4f4;
+  background: #f4f4f4b7;
   border-radius: 5px;
   font-size: 14px;
   position: relative;
@@ -67,4 +68,5 @@
 .current-month {
   font-size: 1.2em; /* Suurempi fonttikoko kuukaudelle */
   font-weight: bold;
+
 }

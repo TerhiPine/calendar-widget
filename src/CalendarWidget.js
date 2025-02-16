@@ -41,7 +41,7 @@ const CalendarWidget = () => {
     <div className="calendar-widget">
       <div className="calendar-header">
         <button onClick={handlePrevMonth}>Edellinen</button>
-        <h3 className="current-month">{format(currentDate, "MMMM yyyy")}</h3> {/* Muutettu muotoon MMMM yyyy */}
+        <h3 className="current-month">{format(currentDate, "dd MMMM yyyy")}</h3> {/* Muutettu muotoon MMMM yyyy */}
         <button onClick={handleNextMonth}>Seuraava</button>
       </div>
 

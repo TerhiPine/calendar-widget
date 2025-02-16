@@ -1,18 +1,35 @@
 import React, { useState } from "react";
 import { format, startOfMonth, endOfMonth, startOfWeek, addDays, addMonths, subMonths, isSameDay } from "date-fns";
 import { Moon, Hemisphere } from "lunarphase-js";
-import './CalendarWidget.css'; // Polku CSS-tiedostoon
+import './CalendarWidget.css';
 
 const CalendarWidget = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
+  const moonPhaseTranslations = {
+    "New": "Uusikuu",
+    "Waxing Crescent": "Kasvava sirppi",
+    "First Quarter": "Ensimmäinen neljännes",
+    "Waxing Gibbous": "Kasvava kupera",
+    "Full": "Täysikuu",
+    "Waning Gibbous": "Vähenevä kupera",
+    "Last Quarter": "Viimeinen neljännes",
+    "Waning Crescent": "Vähenevä sirppi"
+  };
+  
+
   const calculateMoonPhase = (date) => {
     const emoji = Moon.lunarPhaseEmoji(date, { hemisphere: Hemisphere.NORTHERN });
-    const phase = Moon.lunarPhase(date);
-    const phaseName = phase.phaseName;
+    const phase = Moon.lunarPhase(date); // Tämä palauttaa suoraan kuun vaiheen nimen
 
-    return { name: phaseName, emoji: emoji };
+    const phaseFinnish = moonPhaseTranslations[phase] || phase;
+
+    console.log("Phase:", phase); // Tarkista mitä palautuu
+
+    return { name: phaseFinnish, emoji: emoji };
   };
+
+  
 
   const generateCalendar = () => {
     const startDate = startOfWeek(startOfMonth(currentDate));
@@ -41,7 +58,7 @@ const CalendarWidget = () => {
     <div className="calendar-widget">
       <div className="calendar-header">
         <button onClick={handlePrevMonth}>Edellinen</button>
-        <h3 className="current-month">{format(currentDate, "dd MMMM yyyy")}</h3> {/* Muutettu muotoon MMMM yyyy */}
+        <h3 className="current-month">{format(currentDate, "dd MMMM yyyy")}</h3>
         <button onClick={handleNextMonth}>Seuraava</button>
       </div>
 
@@ -51,14 +68,14 @@ const CalendarWidget = () => {
         ))}
         {days.map(day => {
           const phaseInfo = calculateMoonPhase(day);
-          const isToday = isSameDay(day, new Date()); // Tarkistetaan onko päivä sama kuin nykyinen päivä
+          const isToday = isSameDay(day, new Date());
 
           return (
-            <div key={day} className={`calendar-day ${isToday ? 'current-day' : ''}`}> {/* Lisätään luokka current-day jos on nykyinen päivä */}
-                            {format(day, "d")}
-                            <div className="moon-phase">
-                                <span>{phaseInfo.name}</span>
-                                <span>{phaseInfo.emoji}</span>
+            <div key={day} className={`calendar-day ${isToday ? 'current-day' : ''}`}>
+              {format(day, "d")}
+              <div className="moon-phase">
+                <span>{phaseInfo.name}</span> {/* Nyt näyttää oikean nimen */}
+                <span>{phaseInfo.emoji}</span>
               </div>
             </div>
           );
@@ -69,5 +86,6 @@ const CalendarWidget = () => {
 };
 
 export default CalendarWidget;
+
 
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { format, startOfMonth, endOfMonth, startOfWeek, addDays, addMonths, subMonths, isSameDay } from "date-fns";
 import { Moon, Hemisphere } from "lunarphase-js";
+import { plantingCalendar, plantingDetails } from "./data/moonData"; // ✅ Tuodaan kylvökalenteritiedot
 import './CalendarWidget.css';
 
 const moonPhaseTranslations = {
@@ -37,10 +38,22 @@ const getMoonBeliefForDate = (date) => {
   return moonPhaseBeliefs[phaseInfo.name] || "Ei saatavilla tietoa tälle kuun vaiheelle.";
 };
 
+// Funktio hakee kylvettävän kasvin kuukauden mukaan
+const getPlantingSuggestion = (date) => {
+  const month = date.getMonth() + 1; // getMonth() palauttaa 0-11, siksi +1
+  const plants = plantingCalendar[month] || ["Ei tietoa"];
+
+  // Haetaan lisätiedot kasveista
+  const details = plants.map(plant => plantingDetails[plant] || "Ei lisätietoa saatavilla.");
+  
+  return { plants, details };
+};
+
 const CalendarWidget = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [openSection, setOpenSection] = useState(null); // Hallitsee avoimia linkkiosioita
+  const plantingSuggestion = getPlantingSuggestion(currentDate);
 
   const generateCalendar = () => {
     const startDate = startOfWeek(startOfMonth(currentDate));
@@ -94,7 +107,7 @@ const CalendarWidget = () => {
 
           return (
             <div 
-              key={day} 
+              key={day.toISOString()} 
               className={`calendar-day ${isToday ? 'current-day' : ''} ${isSelected ? 'selected-day' : ''}`} 
               onClick={() => handleDayClick(day)}
             >
@@ -109,28 +122,26 @@ const CalendarWidget = () => {
       </div>
 
       <div className="moon-beliefs">
-        <h3>Valitun päivän kuun vaihe</h3>
         <p><strong>{selectedPhase.name} {selectedPhase.emoji}</strong></p>
         <p>{selectedBelief}</p>
       </div>
 
       <div className="calendar-links">
         <button className="calendar-link" onClick={() => toggleSection("kylvokalenteri")}>
-          Kylvökalenteri
-        </button>
-        <button className="calendar-link" onClick={() => toggleSection("kuunVaiheet")}>
-          Kuun vaiheet
-        </button>
-        <button className="calendar-link" onClick={() => toggleSection("uskomukset")}>
-          Uskomukset
+          Kylvökalenteri - {plantingSuggestion.plants.join(", ")}
         </button>
       </div>
 
-      {openSection && (
+      {openSection === "kylvokalenteri" && (
         <div className="list-container open">
-          {openSection === "kylvokalenteri" && <p>🌱 Kylvökalenterin ohjeet ja suositukset kuun vaiheiden mukaan.</p>}
-          {openSection === "kuunVaiheet" && <p>🌕 Kuun vaiheet ja niiden vaikutukset eri toimintoihin.</p>}
-          {openSection === "uskomukset" && <p>🔮 Perinteiset uskomukset eri kuun vaiheista.</p>}
+          <h3>🌱 Kylvökalenteri  </h3>
+          {plantingSuggestion.plants.map((plant, index) =>
+          (
+            <div key={plant}>
+              <strong>{plant}</strong>
+              <p>{plantingSuggestion.details[index]}</p>
+              </div>
+          ))}
         </div>
       )}
     </div>
@@ -138,6 +149,7 @@ const CalendarWidget = () => {
 };
 
 export default CalendarWidget;
+
 
 
 

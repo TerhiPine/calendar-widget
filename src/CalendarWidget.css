@@ -8,6 +8,7 @@
   box-shadow: 0 6px 8px rgba(1, 59, 29, 0.2);
   font-family: Arial, sans-serif;
   text-align: center;
+  position: relative;
 }
 
 .calendar-header {
@@ -78,3 +79,57 @@
   background-color: #ffeb99; /* Vaalea keltainen tausta */
   border: 2px solid #ffcc00;
 }
+.calendar-links {
+  position: absolute;
+  right: -130px; /* Työntää linkit ulos kalenterin reunasta */
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Väli linkkien välillä */
+}
+
+.calendar-link {
+  background: #ffcc00;
+  color: black;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  width: 130px;
+  border-radius: 0px 10px 10px 0px; /* Pyöristys vasemmalle puolelle */
+  transform: translateX(0);
+  transition: transform 0.3s ease-in-out;
+  text-orientation: mixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.calendar-link:hover {
+  transform: translateX(-10px); /* Työntää linkkiä näkyvämmäksi hoverilla */
+}
+
+.list-container {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out;
+  background: #fff;
+  padding: 10px;
+  border-left: 3px solid #ffcc00;
+  position: absolute;
+  right: 100%;
+  top: 0;
+}
+
+.list-container.open {
+  max-height: 200px; /* Riittävä tila listalle */
+}
+
+.list-container ul {
+  padding: 10px;
+  margin: 0;
+  list-style-type: none;
+}
+

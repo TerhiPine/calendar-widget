@@ -15,31 +15,32 @@ const moonPhaseTranslations = {
 };
 
 const moonPhaseBeliefs = {
-  "Uusikuu": "Uudella kuulla kylvetään ja istutetaan ylöspäin satoa kasvattavat kasvit ja se on myös hyvää aikaa vaihtaa huonekasvien mullat",
-  "Kasvava sirppi": "Paras kylvöaika on kuun kasvaessa, jolloin siemenet itävät nopeammin. Sopiva ajankohta on aamupäivä, jolloin vielä etelä- tai lounaistuulet puhaltelevat.",
-  "Ensimmäinen neljännes": "Hyvä aika tehdä päätöksiä ja ottaa konkreettisia askelia kohti tavoitteita.",
-  "Kasvava kupera": "istutetaan satoa maan alle tai tyveen (keräsalaatti, kaali, sipulit, tilli) tekevät kasvit. Alakuun aikaan muokataan ja lannoitetaan myös maa ja sen viimeiset päivät ovat parasta aikaa kitkeä rikkaruohot",
-  "Täysikuu": "Täydenkuun aika on lepoaikaa, silloin ei tehdä mitään, paitsi rentoudutaan",
-  "Vähenevä kupera": "Joskus pitää hävittää tuholaisia vähenevän kuun aikaan, joskus riittää että lisää lannoitetta. ",
-  "Viimeinen neljännes": "Päätösten ja arvioinnin aika. Sopii menneiden asioiden käsittelyyn ja loppuunsaattamiseen.",
-  "Vähenevä sirppi": "Sisäänpäin kääntymisen ja rauhoittumisen aika. Meditaatio ja lepo ovat tärkeitä."
+  "Uusikuu": "Uudella kuulla kylvetään ja istutetaan ylöspäin satoa kasvattavat kasvit.",
+  "Kasvava sirppi": "Paras kylvöaika on kuun kasvaessa, jolloin siemenet itävät nopeammin.",
+  "Ensimmäinen neljännes": "Hyvä aika tehdä päätöksiä ja aloittaa uusia asioita.",
+  "Kasvava kupera": "Istutetaan satoa maan alle kasvavat kasvit, kuten perunat ja sipulit.",
+  "Täysikuu": "Täydenkuun aika on lepoaikaa, jolloin ei kannata tehdä suuria päätöksiä.",
+  "Vähenevä kupera": "Hyvä aika kitkeä rikkaruohot ja poistaa tuholaiset.",
+  "Viimeinen neljännes": "Päätösten ja arvioinnin aika, sopii menneiden asioiden käsittelyyn.",
+  "Vähenevä sirppi": "Sisäänpäin kääntymisen ja rauhoittumisen aika. Meditaatio on tärkeää."
 };
 
 const calculateMoonPhase = (date) => {
-    const emoji = Moon.lunarPhaseEmoji(date, { hemisphere: Hemisphere.NORTHERN });
-    const phase = Moon.lunarPhase(date);
-    const phaseFinnish = moonPhaseTranslations[phase] || phase;
-    return { name: phaseFinnish, emoji: emoji };
+  const emoji = Moon.lunarPhaseEmoji(date, { hemisphere: Hemisphere.NORTHERN });
+  const phase = Moon.lunarPhase(date);
+  const phaseFinnish = moonPhaseTranslations[phase] || phase;
+  return { name: phaseFinnish, emoji: emoji };
 };
 
 const getMoonBeliefForDate = (date) => {
-    const phaseInfo = calculateMoonPhase(date);
-    return moonPhaseBeliefs[phaseInfo.name] || "Ei saatavilla tietoa tälle kuun vaiheelle.";
+  const phaseInfo = calculateMoonPhase(date);
+  return moonPhaseBeliefs[phaseInfo.name] || "Ei saatavilla tietoa tälle kuun vaiheelle.";
 };
 
 const CalendarWidget = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(new Date()); // Valittu päivä
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [openSection, setOpenSection] = useState(null); // Hallitsee avoimia linkkiosioita
 
   const generateCalendar = () => {
     const startDate = startOfWeek(startOfMonth(currentDate));
@@ -66,6 +67,10 @@ const CalendarWidget = () => {
     setSelectedDate(day);
   };
 
+  const toggleSection = (section) => {
+    setOpenSection(openSection === section ? null : section);
+  };
+
   const days = generateCalendar();
   const selectedPhase = calculateMoonPhase(selectedDate);
   const selectedBelief = getMoonBeliefForDate(selectedDate);
@@ -85,13 +90,13 @@ const CalendarWidget = () => {
         {days.map(day => {
           const phaseInfo = calculateMoonPhase(day);
           const isToday = isSameDay(day, new Date());
-          const isSelected = isSameDay(day, selectedDate); // Onko päivä valittu
+          const isSelected = isSameDay(day, selectedDate);
 
           return (
             <div 
               key={day} 
               className={`calendar-day ${isToday ? 'current-day' : ''} ${isSelected ? 'selected-day' : ''}`} 
-              onClick={() => handleDayClick(day)} // Klikattava päivä
+              onClick={() => handleDayClick(day)}
             >
               {format(day, "d")}
               <div className="moon-phase">
@@ -103,17 +108,39 @@ const CalendarWidget = () => {
         })}
       </div>
 
-      {/* Näytetään valitun päivän kuun vaihe ja uskomukset */}
       <div className="moon-beliefs">
         <h3>Valitun päivän kuun vaihe</h3>
         <p><strong>{selectedPhase.name} {selectedPhase.emoji}</strong></p>
         <p>{selectedBelief}</p>
       </div>
+
+      <div className="calendar-links">
+        <button className="calendar-link" onClick={() => toggleSection("kylvokalenteri")}>
+          Kylvökalenteri
+        </button>
+        <button className="calendar-link" onClick={() => toggleSection("kuunVaiheet")}>
+          Kuun vaiheet
+        </button>
+        <button className="calendar-link" onClick={() => toggleSection("uskomukset")}>
+          Uskomukset
+        </button>
+      </div>
+
+      {openSection && (
+        <div className="list-container open">
+          {openSection === "kylvokalenteri" && <p>🌱 Kylvökalenterin ohjeet ja suositukset kuun vaiheiden mukaan.</p>}
+          {openSection === "kuunVaiheet" && <p>🌕 Kuun vaiheet ja niiden vaikutukset eri toimintoihin.</p>}
+          {openSection === "uskomukset" && <p>🔮 Perinteiset uskomukset eri kuun vaiheista.</p>}
+        </div>
+      )}
     </div>
   );
 };
 
 export default CalendarWidget;
+
+
+
 
 
 
